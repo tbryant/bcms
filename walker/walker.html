@@ -1,0 +1,99 @@
+<!doctype html>
+<title>2D Walker</title>
+
+<style>
+canvas
+{
+  background-color:black;
+}
+</style>
+
+<canvas id="gameScreen" width="640" height="448"></canvas>
+<script>
+
+var canvas = document.getElementById("gameScreen");
+var context = canvas.getContext("2d");
+
+var world = [	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+1, 0, 1, 1, 0, 1, 0, 0, 0, 1,
+1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+1, 0, 1, 1, 0, 0, 0, 0, 0, 1,
+1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+];
+
+var hero = {
+  row : 1,
+  col : 1
+};
+
+var tileSize = 64;
+var tilesPerRow = 10;
+var tilesPerCol = 7;
+
+document.addEventListener("keyup", onKeyUp, false);
+
+function onKeyUp(e) {
+  switch(e.keyCode) {
+    case 37:
+      if (isWalkable(hero.row, hero.col - 1)) {
+        hero.col -= 1;
+      }
+      break;
+    case 38:
+      if (isWalkable(hero.row - 1, hero.col)) {
+        hero.row -= 1;
+      }
+      break;
+    case 39:
+      if (isWalkable(hero.row, hero.col + 1)) {
+        hero.col += 1;
+      }
+      break;
+    case 40:
+      if (isWalkable(hero.row + 1, hero.col)) {
+        hero.row += 1;
+      }
+      break;
+  }
+}
+
+function isWalkable(row, col) {
+  return world[col + row * tilesPerRow] == 0;
+}
+
+function draw() {
+  for(var row = 0; row < tilesPerCol; ++row) {
+    for(var col = 0; col < tilesPerRow; ++col) {
+      switch(world[col + row * tilesPerRow]) {
+        case 0:
+        context.fillStyle = "lime";
+        break;
+        case 1:
+        context.fillStyle = "gray";
+        break;
+      }
+
+      context.beginPath();
+      context.rect(tileSize * col, tileSize * row, tileSize, tileSize);
+      context.fill();
+      context.closePath();
+
+      context.fillStyle = "red";
+      context.fillRect(tileSize * hero.col, tileSize * hero.row, tileSize, tileSize);
+    }
+  }
+}
+
+
+(function update() {
+  window.requestAnimationFrame(update, canvas);
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  draw();
+})();
+
+update();
+</script>
