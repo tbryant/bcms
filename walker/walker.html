@@ -14,13 +14,18 @@ canvas
 var canvas = document.getElementById("gameScreen");
 var context = canvas.getContext("2d");
 
-var world = [	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-1, 0, 1, 1, 0, 1, 0, 0, 0, 1,
-1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-1, 0, 1, 1, 0, 0, 0, 0, 0, 1,
-1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
-1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+var roomIndex = 0;
+var world =
+[
+  [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ]
 ];
 
 var hero = {
@@ -29,8 +34,6 @@ var hero = {
 };
 
 var tileSize = 64;
-var tilesPerRow = 10;
-var tilesPerCol = 7;
 
 document.addEventListener("keyup", onKeyUp, false);
 
@@ -60,13 +63,13 @@ function onKeyUp(e) {
 }
 
 function isWalkable(row, col) {
-  return world[col + row * tilesPerRow] == 0;
+  return world[roomIndex][row][col] == 0;
 }
 
 function draw() {
-  for(var row = 0; row < tilesPerCol; ++row) {
-    for(var col = 0; col < tilesPerRow; ++col) {
-      switch(world[col + row * tilesPerRow]) {
+  for(var row = 0; row < world[roomIndex].length; ++row) {
+    for(var col = 0; col < world[roomIndex][row].length; ++col) {
+      switch(world[roomIndex][row][col]) {
         case 0:
         context.fillStyle = "lime";
         break;
@@ -87,13 +90,13 @@ function draw() {
 }
 
 
-(function update() {
+function update() {
   window.requestAnimationFrame(update, canvas);
 
   context.clearRect(0, 0, canvas.width, canvas.height);
 
   draw();
-})();
+};
 
 update();
 </script>
